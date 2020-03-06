@@ -1,13 +1,15 @@
 import React from 'react';
 import {uriBase, currentApi} from '../const'
+import Checkbox from '@material-ui/core/Checkbox';
+import DeleteIcon from '@material-ui/icons/Delete';
+import IconButton from '@material-ui/core/IconButton';
 
 export default function Task(props) {
     const [isComplete, setIsComplete] = React.useState(props.task.isComplete)
     const [style, setStyle] = React.useState(isComplete ? {textDecorationLine: 'line-through'} : {} )
+    const [checked, setChecked] = React.useState(isComplete);
 
     const onClickComplete = () => {
-
-        console.log(isComplete)
 
         if(!isComplete){
             setStyle({textDecorationLine: 'line-through'})
@@ -16,8 +18,6 @@ export default function Task(props) {
             setStyle({})
             setIsComplete(false)
         }
-
-        console.log(props.task._id)
 
         fetch(`${uriBase}${currentApi}/${props.task._id}`,{
             method: "PATCH",
@@ -34,10 +34,6 @@ export default function Task(props) {
 
             return httpResult.json
         })
-        .then(response => {
-
-            console.log(props.task)
-        })
         .catch(error => {
             console.log(error)
         })
@@ -46,10 +42,20 @@ export default function Task(props) {
     //{textDecorationLine: 'line-through'}
 
     return(
+        <div>
         <div style={style}>
-            <button onClick={onClickComplete}>Complete</button>
-            {`${ new Date(props.task.date).toLocaleDateString()} | ${props.task.text}`}
-            <button onClick={props.onClickDelete}>Delete</button>
+            <Checkbox
+                checked={checked}
+                onChange={(event) => setChecked(event.target.checked)}
+                color="primary"
+                onClick={onClickComplete}
+            />
+            {`${ new Date(props.task.date).toLocaleDateString()} | ${props.task.text} `}
+
+            <IconButton aria-label="delete" onClick={props.onClickDelete}>
+            <DeleteIcon fontSize="small" />
+            </IconButton>
+        </div>
         </div>
     )
 }

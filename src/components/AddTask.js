@@ -1,4 +1,5 @@
 import React from 'react';
+import color from '@material-ui/core/colors/lightBlue';
 
 export default function Task(props) {
 
@@ -8,9 +9,9 @@ export default function Task(props) {
     }
 
     return(
-        <div>
+        <div style={{backgroundColor: "lightblue", padding: '10px'}}>
             New Task:
-         <input type='text' onChange={onChangeHandler} value={props.text}></input>
+         <input style={{margin: '5px'}} type='text' onChange={onChangeHandler} value={props.text}></input>
             <button onClick={props.onClickAdd}>Add</button>
         </div>
     )

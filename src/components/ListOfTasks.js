@@ -1,7 +1,7 @@
 import React from 'react';
 import Task from './Task'
 import AddTask from './AddTask'
-import {uriBase, currentApi} from '../const'
+import { uriBase, currentApi } from '../const'
 
 const DUMMY_DATA = [
     {
@@ -16,6 +16,12 @@ const DUMMY_DATA = [
     }
 
 ]
+
+const listStyle = {
+
+    listStyleType: 'none',
+    
+}
 
 export default function ListOfTasks() {
     const [tasks, setTasks] = React.useState([])
@@ -46,7 +52,7 @@ export default function ListOfTasks() {
             })
     }
 
-    const onClickDelete = (index, event)=> {
+    const onClickDelete = (index, event) => {
 
         console.log(index)
 
@@ -58,20 +64,20 @@ export default function ListOfTasks() {
                 "Content-Type": "application/json",
             }
         })
-        .then(httpResult => {
-            if (!httpResult.ok) {
-                throw new Error("Bad response")
-            }
+            .then(httpResult => {
+                if (!httpResult.ok) {
+                    throw new Error("Bad response")
+                }
 
-            return httpResult.json()
-        })
-        .then(response => {
-            
-            refresh()
-        })
-        .catch(error => {
-            console.log(error)
-        })
+                return httpResult.json()
+            })
+            .then(response => {
+
+                refresh()
+            })
+            .catch(error => {
+                console.log(error)
+            })
 
         // let data = [...tasks]
 
@@ -81,6 +87,13 @@ export default function ListOfTasks() {
     }
 
     const onClickAdd = () => {
+
+        if (text === '') {
+
+            return (
+                alert("Task cannot be empty")
+            )
+        }
 
         let newTask = {
             date: new Date(),
@@ -95,20 +108,20 @@ export default function ListOfTasks() {
             },
             body: JSON.stringify(newTask)
         })
-        .then(httpResult => {
-            if (!httpResult.ok) {
-                throw new Error("Bad response")
-            }
+            .then(httpResult => {
+                if (!httpResult.ok) {
+                    throw new Error("Bad response")
+                }
 
-            return httpResult.json()
-        })
-        .then(response => {
+                return httpResult.json()
+            })
+            .then(response => {
 
-            refresh()
-        })
-        .catch(error => {
-            console.log(error)
-        })
+                refresh()
+            })
+            .catch(error => {
+                console.log(error)
+            })
 
         // let data = [...tasks]
 
@@ -118,30 +131,32 @@ export default function ListOfTasks() {
 
         // setTasks(data)
 
-        // setText('')
+        setText('')
     }
 
     React.useEffect(() => {
 
         refresh()
     }, [])
-
-    return(
+//
+    return (
         <div>
-      <ul>
-        {
-          tasks.map((task, index) => {
-            return (
-              <li key={index}>
-                <Task task={task} onClickDelete={(event) => {onClickDelete(index,event)}} ></Task> 
-              </li>
-            )
-          })
-        }
-      </ul>
-      <div>
-          <AddTask text={text} setText={setText} onClickAdd={onClickAdd} ></AddTask>
-      </div>
+            <div style={{display: 'flex', justifyContent: 'center'}} >
+                <ul style={{textAlign: 'left'}}>
+                    {
+                    tasks.map((task, index) => {
+                        return (
+                            <li style={listStyle} key={index}>
+                                <Task task={task} onClickDelete={(event) => { onClickDelete(index, event) }} ></Task>
+                            </li>
+                        )
+                    })
+                    }
+                </ul>
+            </div>
+            <div>
+                <AddTask text={text} setText={setText} onClickAdd={onClickAdd} ></AddTask>
+            </div>
         </div>
     )
 }
