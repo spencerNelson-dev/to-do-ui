@@ -2,6 +2,8 @@ import React from 'react';
 import Task from './Task'
 import AddTask from './AddTask'
 import { uriBase, currentApi } from '../const'
+import {Link} from 'react-router-dom'
+import {AuthContext} from './AuthContext'
 
 const DUMMY_DATA = [
     {
@@ -20,13 +22,16 @@ const DUMMY_DATA = [
 const listStyle = {
 
     listStyleType: 'none',
-    
+
 }
 
 export default function ListOfTasks() {
     const [tasks, setTasks] = React.useState([])
-
     const [text, setText] = React.useState('')
+    const [isEdit, setIsEdit] = React.useState(false)
+    const [editId, setEditId] = React.useState('')
+
+    const {setLoggedIn} = React.useContext(AuthContext)
 
     const refresh = () => {
 
@@ -48,115 +53,120 @@ export default function ListOfTasks() {
                 setTasks(response)
             })
             .catch(error => {
+
                 console.log(error)
             })
     }
 
-    const onClickDelete = (index, event) => {
+    const onClickAdd = (event) => {
 
-        console.log(index)
+            // check to see if the task is empty
+            if (text === '') {
 
-        let removeTask = tasks[index]
-
-        fetch(`${uriBase}${currentApi}/${removeTask._id}`, {
-            method: "DELETE",
-            headers: {
-                "Content-Type": "application/json",
+                return (
+                    alert("Task cannot be empty")
+                )
             }
-        })
-            .then(httpResult => {
-                if (!httpResult.ok) {
-                    throw new Error("Bad response")
+
+                let newTask = {
+                    date: new Date(),
+                    text: text,
+                    isComplete: false
                 }
 
-                return httpResult.json()
-            })
-            .then(response => {
+                fetch(`${uriBase}${currentApi}`, {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                    body: JSON.stringify(newTask)
+                })
+                    .then(httpResult => {
+                        if (!httpResult.ok) {
+                            throw new Error("Bad response")
+                        }
 
-                refresh()
-            })
-            .catch(error => {
-                console.log(error)
-            })
+                        return httpResult.json()
+                    })
+                    .then(response => {
 
-        // let data = [...tasks]
+                        refresh()
+                    })
+                    .catch(error => {
+                        console.log(error)
+                    })
 
-        // data.splice(index, 1)
-
-        // setTasks(data)
+                //clear text field
+                setText('')
     }
 
-    const onClickAdd = () => {
+    const onClickEdit = () => {
 
-        if (text === '') {
+        setIsEdit(false)
 
-            return (
-                alert("Task cannot be empty")
-            )
-        }
+        if (editId !== ''){
 
-        let newTask = {
-            date: new Date(),
-            text: text,
-            isComplete: false
-        }
-
-        fetch(`${uriBase}${currentApi}`, {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-            },
-            body: JSON.stringify(newTask)
-        })
+            fetch(`${uriBase}${currentApi}/${editId}`,{
+                method: "PATCH",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({"text": text})
+            })
             .then(httpResult => {
-                if (!httpResult.ok) {
-                    throw new Error("Bad response")
+                if(!httpResult.ok){
+                    throw new Error("Could not update with edit")
                 }
 
-                return httpResult.json()
+                return httpResult
             })
-            .then(response => {
+            .then(result => {
 
                 refresh()
+                setText('')
             })
-            .catch(error => {
+            .catch(error =>{
                 console.log(error)
             })
-
-        // let data = [...tasks]
-
-        // data.push(newTask)
-
-        // console.log(data)
-
-        // setTasks(data)
-
-        setText('')
+        } else {
+            alert("Cannot Edit")
+        } 
     }
+
 
     React.useEffect(() => {
 
         refresh()
     }, [])
-    
+
     return (
         <div>
-            <div style={{display: 'flex', justifyContent: 'center'}} >
-                <ul style={{textAlign: 'left'}}>
+            <div >
+                <ul >
                     {
-                    tasks.map((task, index) => {
-                        return (
-                            <li style={listStyle} key={index}>
-                                <Task task={task} onClickDelete={(event) => { onClickDelete(index, event) }} ></Task>
-                            </li>
-                        )
-                    })
+                        tasks.map((task, index) => {
+                            return (
+                                <li style={listStyle} key={index}>
+                                    <Task task={task}
+                                        refresh={refresh}
+                                        setIsEdit={setIsEdit}
+                                        setText={setText}
+                                        setEditId={setEditId}></Task>
+                                </li>
+                            )
+                        })
                     }
                 </ul>
             </div>
             <div>
-                <AddTask text={text} setText={setText} onClickAdd={onClickAdd} ></AddTask>
+                <AddTask text={text} setText={setText}
+                    onClickAdd={onClickAdd}
+                    refresh={refresh}
+                    isEdit={isEdit} setIsEdit={setIsEdit}
+                    onClickEdit={onClickEdit} >
+                </AddTask>
             </div>
+            <button onClick={() => {setLoggedIn(false)}}>LOGOUT</button>
         </div>
     )
 }

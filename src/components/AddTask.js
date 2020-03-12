@@ -1,18 +1,35 @@
 import React from 'react';
-import color from '@material-ui/core/colors/lightBlue';
 
 export default function Task(props) {
 
     const onChangeHandler = (event) => {
 
         props.setText(event.target.value)
+
+        if(event.keyCode === 13){
+            props.onClickAdd(event)
+        }
+    }
+
+    const createButton = () => {
+
+        if(!props.isEdit){
+            return (
+                <button onClick={props.onClickAdd}>Add</button>
+            )
+        } else {
+            return (
+                <button onClick={props.onClickEdit}>Edit</button>
+            )
+        }
+
     }
 
     return(
         <div style={{backgroundColor: "lightblue", padding: '10px'}}>
-            New Task:
-         <input style={{margin: '5px'}} type='text' onChange={onChangeHandler} value={props.text}></input>
-            <button onClick={props.onClickAdd}>Add</button>
+            {props.isEdit ? "Edit Task:": "New Task:"}
+         <input style={{margin: '5px'}} type='text' onChange={onChangeHandler} value={props.text} onKeyUp={onChangeHandler}></input>
+            {createButton()}
         </div>
     )
 }
