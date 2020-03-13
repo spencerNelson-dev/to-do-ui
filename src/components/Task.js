@@ -58,6 +58,7 @@ export default function Task(props) {
 
         let removeTask = props.task
 
+
         fetch(`${uriBase}${currentApi}/${removeTask._id}`, {
             method: "DELETE",
             headers: {
@@ -107,7 +108,7 @@ export default function Task(props) {
             <Grid item xs>
                 <div style={{textAlign: 'center'}}>
                 <div style={style}>
-            {`${ new Date(props.task.date).toLocaleDateString()} | ${props.task.text} `}
+                    {`${props.task.text}`}
                 </div>
                 </div>
             </Grid>

@@ -5,6 +5,7 @@ import SignIn from './SignIn';
 import {AuthProvider} from './AuthContext'
 import ProtectedRoute from './ProtectedRoute'
 import Test from './Test'
+import Title from './Title'
 
 function MainRouter(props) {
     return (

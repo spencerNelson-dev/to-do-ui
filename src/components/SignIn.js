@@ -2,6 +2,7 @@ import React, { useContext, useState } from 'react';
 import { Link as RLink, Redirect } from 'react-router-dom'
 import { AuthContext } from './AuthContext'
 import { uriBase, userApi } from '../const'
+import Title from './Title'
 
 function SignIn(props) {
     //State
@@ -9,7 +10,7 @@ function SignIn(props) {
     const [password, setPassword] = useState('')
 
     //Context
-    const { loggedIn, setLoggedIn } = useContext(AuthContext)
+    const { loggedIn, setLoggedIn, setToken } = useContext(AuthContext)
 
     const onChangeHandler = (event) => {
 
@@ -44,11 +45,14 @@ function SignIn(props) {
             if (!httpResult.ok) {
                 throw new Error("Could not get user")
             }
-
+            console.log("httpresult")
             return httpResult.json()
         })
         .then(result => {
-            setLoggedIn(result)
+            if(result.token !== ''){
+                setLoggedIn(true)
+                setToken(result.token)
+            } 
             props.history.push('/tasks')
         })
         .catch(error => {
@@ -63,7 +67,6 @@ function SignIn(props) {
             Password:
             <input type='password' name="password" onChange={onChangeHandler} value={password}></input><br />
             <button onClick={onClickHandler}>Log In</button><br />
-            {`You are ${loggedIn ? "are" : "are not"} logged in`}
         </div>
     );
 }
