@@ -28,7 +28,9 @@ export default function Task(props) {
     return(
         <div style={{backgroundColor: "lightblue", padding: '10px', height: '50px'}}>
             {props.isEdit ? "Edit Task:": "New Task:"}
-         <input style={{margin: '5px', height: '50%', width: '35%', fontSize: '16px'}} type='text' onChange={onChangeHandler} value={props.text} onKeyUp={onChangeHandler}></input>
+         <input style={{margin: '5px', height: '50%', width: '35%', fontSize: '16px'}}
+          type='text' onChange={onChangeHandler} value={props.text} onKeyUp={onChangeHandler}>
+          </input>
             {createButton()}
         </div>
     )

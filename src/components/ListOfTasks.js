@@ -1,11 +1,10 @@
 import React from 'react';
 import Task from './Task'
 import AddTask from './AddTask'
-import Title from './Title'
-import DateList from './DateList'
-import { uriBase, currentApi, JWT_KEY } from '../const'
+import {  JWT_KEY } from '../const'
 import { AuthContext } from './AuthContext'
 import { verifyToken } from '../jwtUtils'
+import { getTasksByUserId , createNewTask, updateTask} from '../fetchUtils'
 
 
 const listStyle = {
@@ -19,52 +18,40 @@ const dateStyle = {
     backgroundColor: 'lightBlue'
 }
 
-export default function ListOfTasks() {
+export default function ListOfTasks(props) {
     const [user, setUser] = React.useState('')
     const [tasks, setTasks] = React.useState([])
     const [text, setText] = React.useState('')
     const [isEdit, setIsEdit] = React.useState(false)
     const [editId, setEditId] = React.useState('')
 
-    const { setLoggedIn, token } = React.useContext(AuthContext)
+    const { setLoggedIn, token, admin, setAdmin } = React.useContext(AuthContext)
 
     const refresh = () => {
 
         // Verify Token
         verifyToken(token, JWT_KEY)
             .then(payload => {
+
                 return payload.user
             })
-            .then(result => {
-                setUser(result)
+            .then(user => {
 
-                // GET all the tasks
-                fetch(`${uriBase}${currentApi}/${result._id}`, {
-                    method: 'GET',
-                    headers: {
-                        "Content-Type": "application/json",
-                    }
+                // set user
+                setUser(user)
+                setAdmin(user.admin)
+
+                // get tasks by user id
+                getTasksByUserId(user)
+                .then(tasks => {
+                    setTasks(tasks)
                 })
-                    .then(httpResult => {
-                        if (!httpResult.ok) {
-                            throw new Error("Bad response")
-                        }
-
-                        return httpResult.json()
-                    })
-                    .then(response => {
-
-                        setTasks(response)
-                    })
-                    .catch(error => {
-
-                        console.log(error)
-                    })
 
             }) // end of verify token
             .catch(error => {
 
                 console.log(error)
+                props.history.push('/')
             })
     }
 
@@ -78,6 +65,7 @@ export default function ListOfTasks() {
             )
         }
 
+        // construct the new task object
         let newTask = {
             date: new Date(),
             text: text,
@@ -85,27 +73,11 @@ export default function ListOfTasks() {
             userId: user._id
         }
 
-        fetch(`${uriBase}${currentApi}`, {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-            },
-            body: JSON.stringify(newTask)
+        // add the object to the database and refresh
+        createNewTask(newTask)
+        .then(result => {
+            refresh()
         })
-            .then(httpResult => {
-                if (!httpResult.ok) {
-                    throw new Error("Bad response")
-                }
-
-                return httpResult.json()
-            })
-            .then(response => {
-
-                refresh()
-            })
-            .catch(error => {
-                console.log(error)
-            })
 
         //clear text field
         setText('')
@@ -117,22 +89,11 @@ export default function ListOfTasks() {
 
         if (editId !== '') {
 
-            fetch(`${uriBase}${currentApi}/${editId}`, {
-                method: "PATCH",
-                headers: {
-                    "Content-Type": "application/json"
-                },
-                body: JSON.stringify({ "text": text })
-            })
-                .then(httpResult => {
-                    if (!httpResult.ok) {
-                        throw new Error("Could not update with edit")
-                    }
-
-                    return httpResult
-                })
+            // update task in db
+            updateTask(editId, text)
                 .then(result => {
 
+                    // update the view
                     refresh()
                     setText('')
                 })
@@ -149,53 +110,75 @@ export default function ListOfTasks() {
         refresh()
     }, [])
 
+    const tasksToDisplayArray = (tasks) => {
+        // here we reduce our tasks array, pulling out unique dates
+        // and making them their own items in the display array
+        // later with our map we will return the date
+        // as its own li
+
+        return tasks.reduce((displayArr, currentTask) => {
+
+            // if the date is not
+            if (new Date(currentTask.date).toLocaleDateString() !==
+                new Date(currentDate).toLocaleDateString()) {
+
+                // store the current date
+                currentDate = currentTask.date
+
+                // push the date and then push the task
+                displayArr.push(currentDate)
+                displayArr.push(currentTask)
+            } else {
+                // if the date is the same as the previous task
+                // then just push the task
+                displayArr.push(currentTask)
+            }
+
+            return displayArr
+
+        }, []) // end of reduce()
+        .map((task, index) => {
+            // This map function will translate our
+            // display array to li items
+
+            return (
+
+                // if the text exists then we know that the
+                // item is not just a date and we will display
+                // all the task information
+                task.text ? (
+                    <li style={listStyle} key={index}>
+                        <Task task={task}
+                            refresh={refresh}
+                            setIsEdit={setIsEdit}
+                            setText={setText}
+                            setEditId={setEditId}></Task>
+                    </li>
+                    // if the item has no text property then
+                    // we will just display the date.
+                ) : (
+                        <li style={dateStyle} key={index}>
+                            {`***** ${new Date(task).toLocaleDateString()} *****`}
+                        </li>
+                    )
+            )
+        }) // end of map()
+    } // end of tasksToDisplayArr()
+
     let currentDate = new Date(0)
 
     return (
         <div>
             <h4>{`${user.firstName} ${user.lastName}'s Tasks:`}</h4>
+
             <div >
-                <ul style={{padding: 0}}>
+                <ul style={{ padding: 0 }}>
                     {
-                        tasks.reduce((accumlator, currentValue) => {
-                            // here we reduce our tasks array, pulling out unique dates
-                            // and making them their own tasks
-                            // later with our map will will return the date
-                            // as its own li
-                            if(new Date(currentValue.date).toLocaleDateString() !==
-                               new Date(currentDate).toLocaleDateString())
-                            {
-                                currentDate = currentValue.date
-                                accumlator.push(currentDate)
-                                accumlator.push(currentValue)
-                            } else{
-                                accumlator.push(currentValue)
-                            }
-                            return accumlator
-
-                        },[]).map((task, index) => {
-
-                            return (
-
-                                task.text ? (
-                                <li style={listStyle} key={index}>
-                                    <Task task={task}
-                                        refresh={refresh}
-                                        setIsEdit={setIsEdit}
-                                        setText={setText}
-                                        setEditId={setEditId}></Task>
-                                </li>
-                                ) : (
-
-                                    <li style={dateStyle} key={index}>
-                                        {`***** ${ new Date(task).toLocaleDateString()} *****`}
-                                        </li>
-                                )
-                            )
-                        })
+                        tasksToDisplayArray(tasks)
                     }
                 </ul>
             </div>
+
             <div>
                 <AddTask text={text} setText={setText}
                     onClickAdd={onClickAdd}
@@ -204,27 +187,10 @@ export default function ListOfTasks() {
                     onClickEdit={onClickEdit} >
                 </AddTask>
             </div>
+
             <button onClick={() => { setLoggedIn(false) }}>LOGOUT</button>
+            <br/><br/>
+            <button onClick={() => { props.history.push('/create-user')}}>Admin Page</button>
         </div>
     )
 }
-
-/* 
-                <ul >
-                    {
-                        tasks.map((task, index) => {
-
-                            return (
-
-                                <li style={listStyle} key={index}>
-                                    <Task task={task}
-                                        refresh={refresh}
-                                        setIsEdit={setIsEdit}
-                                        setText={setText}
-                                        setEditId={setEditId}></Task>
-                                </li>
-                            )
-                        })
-                    }
-                </ul>
-*/

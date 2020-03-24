@@ -1,5 +1,6 @@
 import React from 'react';
 import {uriBase, currentApi} from '../const'
+import {updateTask, deleteTask} from '../fetchUtils'
 import Checkbox from '@material-ui/core/Checkbox';
 import DeleteIcon from '@material-ui/icons/Delete';
 import IconButton from '@material-ui/core/IconButton';
@@ -29,23 +30,11 @@ export default function Task(props) {
 
         updateLook()
 
-        fetch(`${uriBase}${currentApi}/${props.task._id}`,{
-            method: "PATCH",
-            headers: {
-                "Content-Type": "application/json"
-            },
-            body: JSON.stringify({"isComplete": !isComplete})
-            
-        })
-        .then(httpResult=> {
-            if(!httpResult.ok){
-                console.log("Did not patch")
-            }
-
-            return httpResult.json()
-        })
+        // update task with id and new isComplete
+        updateTask(props.task._id, isComplete)
         .then(result => {
 
+            // update state and refresh
             setIsComplete(result.isComplete)
             props.refresh()
         })
@@ -58,20 +47,8 @@ export default function Task(props) {
 
         let removeTask = props.task
 
-
-        fetch(`${uriBase}${currentApi}/${removeTask._id}`, {
-            method: "DELETE",
-            headers: {
-                "Content-Type": "application/json",
-            }
-        })
-        .then(httpResult => {
-            if (!httpResult.ok) {
-                throw new Error("Bad response")
-            }
-
-            return httpResult.json()
-        })
+        // remove task from the db and rerender
+        deleteTask(removeTask._id)
         .then(response => {
 
            props.refresh()

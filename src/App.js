@@ -6,7 +6,7 @@ import MainRouter from './components/MainRouter';
 function App() {
   return (
     <div className="App">
-      <Title></Title>
+      
       <MainRouter></MainRouter>
     </div>
   );

@@ -6,10 +6,11 @@ const AuthProvider = (props) => {
 
     const [loggedIn, setLoggedIn] = React.useState(false)
     const [token, setToken] = React.useState('')
+    const [admin, setAdmin] = React.useState(false)
 
     return (
         <div>
-            <AuthContext.Provider value ={{loggedIn, setLoggedIn, token, setToken}}>
+            <AuthContext.Provider value ={{loggedIn, setLoggedIn, token, setToken, admin, setAdmin}}>
                 {props.children}
             </AuthContext.Provider>
         </div>

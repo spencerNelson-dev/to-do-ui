@@ -1,10 +1,7 @@
-//const uriBase = "http://localhost:5001"
-const uriBase = "https://sn-todo.herokuapp.com"
-
 
 const currentApi = "/tasks"
 const userApi = "/users"
-const JWT_KEY = '12345'
+const JWT_KEY = 'abc123'
 const DUMMY_DATA = [
     {
         date: (new Date()).toLocaleDateString(),
@@ -18,6 +15,18 @@ const DUMMY_DATA = [
     }
 
 ]
+
+//const uriBase = "http://localhost:5001"
+//const uriBase = "https://sn-todo.herokuapp.com"
+
+// here we switch our uriBase according to the node environment
+const uriBase = process.env.NODE_ENV !== 'production' ? (
+    "http://localhost:5001"
+) : (
+    "sn-todo.herokuapp.com"
+)
+
+
 
 module.exports.uriBase = uriBase
 module.exports.currentApi = currentApi

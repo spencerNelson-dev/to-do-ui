@@ -1,8 +1,9 @@
-import React, { useContext, useState } from 'react';
+import React, { useContext, useState, useEffect } from 'react';
 import { Link as RLink, Redirect } from 'react-router-dom'
 import { AuthContext } from './AuthContext'
 import { uriBase, userApi } from '../const'
 import Title from './Title'
+import queryString from 'query-string'
 
 function SignIn(props) {
     //State
@@ -10,7 +11,7 @@ function SignIn(props) {
     const [password, setPassword] = useState('')
 
     //Context
-    const { loggedIn, setLoggedIn, setToken } = useContext(AuthContext)
+    const { loggedIn, setLoggedIn, setToken, token } = useContext(AuthContext)
 
     const onChangeHandler = (event) => {
 
@@ -30,10 +31,14 @@ function SignIn(props) {
 
     }
 
+    // email password sign in
     const onClickHandler = () => {
 
         let body = { email, password }
 
+        // Post the email and password to the api
+        // if an email is found and it matches the
+        // password, it will return a json web token
         fetch(`${uriBase}${userApi}/login`, {
             method: 'POST',
             headers: {
@@ -49,7 +54,10 @@ function SignIn(props) {
             return httpResult.json()
         })
         .then(result => {
+
+            // if a token was returned
             if(result.token !== ''){
+                console.log(token)
                 setLoggedIn(true)
                 setToken(result.token)
             } 
@@ -60,6 +68,20 @@ function SignIn(props) {
         })
     }
 
+    // oauth sign in
+    useEffect( (parsed) => {
+
+        parsed = queryString.parseUrl(window.location.href)
+
+        if (parsed.query.token){
+
+            console.log("useEffect", parsed.query.token)
+            setLoggedIn(true)
+            setToken(parsed.query.token)
+            props.history.push('/tasks')
+        }
+    })
+
     return (
         <div>
             Email:
@@ -67,6 +89,7 @@ function SignIn(props) {
             Password:
             <input type='password' name="password" onChange={onChangeHandler} value={password}></input><br />
             <button onClick={onClickHandler}>Log In</button><br />
+            <a href="http://localhost:5001/users/auth/google/login">LOGIN WITH GOOGLE</a>
         </div>
     );
 }
