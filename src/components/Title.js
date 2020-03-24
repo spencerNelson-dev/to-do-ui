@@ -1,6 +1,4 @@
-import React, { useContext, useState, useEffect } from 'react'
-import { AuthContext } from './AuthContext'
-import {uriBase, userApi} from '../const'
+import React from 'react'
 
 
 

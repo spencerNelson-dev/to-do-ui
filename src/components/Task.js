@@ -1,5 +1,4 @@
 import React from 'react';
-import {uriBase, currentApi} from '../const'
 import {updateTask, deleteTask} from '../fetchUtils'
 import Checkbox from '@material-ui/core/Checkbox';
 import DeleteIcon from '@material-ui/icons/Delete';

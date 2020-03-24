@@ -1,8 +1,6 @@
 import React, { useContext, useState, useEffect } from 'react';
-import { Link as RLink, Redirect } from 'react-router-dom'
 import { AuthContext } from './AuthContext'
 import { uriBase, userApi } from '../const'
-import Title from './Title'
 import queryString from 'query-string'
 
 function SignIn(props) {
@@ -11,7 +9,7 @@ function SignIn(props) {
     const [password, setPassword] = useState('')
 
     //Context
-    const { loggedIn, setLoggedIn, setToken, token } = useContext(AuthContext)
+    const {setLoggedIn, setToken, token } = useContext(AuthContext)
 
     const onChangeHandler = (event) => {
 
@@ -88,8 +86,9 @@ function SignIn(props) {
             <input type='email' name="email" onChange={onChangeHandler} value={email}></input><br />
             Password:
             <input type='password' name="password" onChange={onChangeHandler} value={password}></input><br />
-            <button onClick={onClickHandler}>Log In</button><br />
-            <a href="http://localhost:5001/users/auth/google/login">LOGIN WITH GOOGLE</a>
+            <button onClick={onClickHandler}>Log In</button><br /><br/>
+            <a href={`${uriBase}${userApi}/auth/google/login`}>LOGIN WITH GOOGLE</a><br/><br/>
+            <a href={`${uriBase}${userApi}/auth/facebook/login`}>LOGIN WITH FACEBOOK</a>
         </div>
     );
 }

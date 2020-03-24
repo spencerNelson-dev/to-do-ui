@@ -50,6 +50,57 @@ export const getAllUsers = (token) => {
     })
 }
 
+// POST - create new user
+export const createNewUser = (user, token) => {
+    
+    console.log("Create new User", user)
+
+    let createObj = {}
+    createObj.doc = user
+
+    return fetch(`${uriBase}${userApi}/create`,{ 
+        method: "POST",
+        headers: {
+            "Authorization": `Bearer ${token}`,
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify(createObj)
+    })
+    .then(httpResult => {
+        if(!httpResult.ok){
+            throw new Error("CreateNewUser Failed")
+        }
+
+        console.log("createNewUser", httpResult.json())
+        return httpResult.json()
+    })
+    .catch(error => {
+        console.log(error)
+    })
+}
+
+// delete user
+export const deleteUser = (user, token) => {
+
+    console.log("deleteUser user._id", user._id)
+
+
+    return fetch(`${uriBase}${userApi}/delete/${user._id}`,{
+        method: "DELETE",
+        headers: {
+            "Authorization": `Bearer ${token}`,
+            "Content-Type": "application/json"
+        }
+    })
+    .then(httpResult => {
+        if (!httpResult.ok) {
+            throw new Error("Bad response")
+        }
+
+        return httpResult.json()
+    })
+}
+
 // POST - Create new task given a task object
 export const createNewTask = (newTask) => {
 
@@ -72,6 +123,32 @@ export const createNewTask = (newTask) => {
         .catch(error => {
             console.log(error)
         })
+}
+
+// PATCH - update user
+export const updateUser = (userId,updatedUser, token) => {
+
+    console.log("updateUser user", updatedUser)
+
+    return fetch(`${uriBase}${userApi}/update/${userId}`, {
+        method: "PATCH",
+        headers: {
+            "Authorization": `Bearer ${token}`,
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify(updatedUser)
+
+    })
+    .then(httpResult => {
+        if(!httpResult.ok){
+            throw new Error("Could not update user")
+        }
+
+        return httpResult.json()
+    })
+    .catch(error => {
+        console.log(error)
+    })
 }
 
 // PATCH - update task given task id and what to change

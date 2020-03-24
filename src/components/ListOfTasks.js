@@ -190,7 +190,15 @@ export default function ListOfTasks(props) {
 
             <button onClick={() => { setLoggedIn(false) }}>LOGOUT</button>
             <br/><br/>
-            <button onClick={() => { props.history.push('/create-user')}}>Admin Page</button>
+            <div>
+                {
+                    admin ? (
+                        <button onClick={() => { props.history.push('/create-user')}}>Admin Page</button>
+                    ) : (null)
+                }
+            </div>
+            
+            
         </div>
     )
 }

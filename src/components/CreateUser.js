@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { AuthContext } from './AuthContext'
-import { uriBase, currentApi, JWT_KEY, userApi } from '../const'
-import {getAllUsers} from '../fetchUtils'
+import {getAllUsers, createNewUser, deleteUser, updateUser} from '../fetchUtils'
 import {Link as RLink} from 'react-router-dom'
+
+import CheckBox from '@material-ui/core/Checkbox'
 
 const CreateUser = (props) => {
 
@@ -13,7 +14,7 @@ const CreateUser = (props) => {
     const [email, setEmail] = useState('')
     const [password, setPassword] = useState('')
     const [checkbox, setCheckbox] = useState(false)
-    const [admin] = useState(props.user)
+    const [admin, setAdmin] = useState(false)
     const [isEdit, setIsEdit] = React.useState(false)
     const [editId, setEditId] = React.useState('')
 
@@ -21,6 +22,20 @@ const CreateUser = (props) => {
     // context
     const { setLoggedIn, token } = React.useContext(AuthContext)
 
+    const clearUserState = () => {
+        setFirstName('')
+        setLastName('')
+        setEmail('')
+        setPassword('')
+        setCheckbox(false)
+        setAdmin(false)
+        setIsEdit(false)
+        setEditId('')
+    }
+
+    const changeCheckBox = () => {
+        setAdmin(!admin)
+    }
 
     const onChangeHandler = (event) => {
 
@@ -46,15 +61,75 @@ const CreateUser = (props) => {
 
     }
 
-    const onClickAdd = () => {
+    const onClickAdd = async () => {
+
+        let newUser = {
+            firstName,
+            lastName,
+            email,
+            password,
+            admin
+        }
+
+        await createNewUser(newUser, token)
+
+        clearUserState()
+        refresh()
+    }
+
+    const onClickEdit = async (event) => {
+
+        console.log(users)
+
+        let updatedUser = {
+            firstName,
+            lastName,
+            email,
+            password,
+            admin
+        }
+
+        console.log(editId, updatedUser)
+
+        await updateUser(editId, updatedUser, token)
+
+        clearUserState()
+        refresh()
+    }
+
+    const onUserEditClick = (event) => {
+
+        let index = event.target.name
+
+        let user = users[index]
+
+        //console.log(index, user)
+
+        setFirstName(user.firstName)
+        setLastName(user.lastName)
+        setEmail(user.email)
+        setAdmin(user.admin)
+        setPassword(user.password)
+
+        setIsEdit(true)
+        setEditId(user._id)
 
     }
 
-    const onClickEdit = () => {
+    const onUserDeleteClick = async (event) => {
 
+        let index = event.target.name
+
+        let user = users[index]
+
+        await deleteUser(user, token)
+
+        clearUserState()
+        refresh()
     }
 
     const refresh = () => {
+
 
         getAllUsers(token)
         .then(users => {
@@ -89,7 +164,7 @@ const CreateUser = (props) => {
 
     return (
         <div>
-            Create New Account
+            Create New Account <br/>
             <div>
                     First Name:
                     <input type='text' name='firstName' onChange={onChangeHandler} value={firstName}></input><br />
@@ -100,9 +175,18 @@ const CreateUser = (props) => {
                     Password:
                     <input type='password' name='password' onChange={onChangeHandler} value={password}></input><br/>
 
-                    <input type='checkbox' name="admin" onChange={changeCheckbox}></input> Admin <br/>
+                    <CheckBox checked={admin} onChange={changeCheckBox} value={admin}></CheckBox> Admin <br/>
                     {createButton()}        
             </div>
+
+            <div>
+                <br/><br/>
+            <button onClick={() => { setLoggedIn(false) }}>LOGOUT</button><t></t>
+            <RLink to='/tasks'>Tasks</RLink>
+            <button onClick={refresh}>Refresh</button>
+            <button onClick={clearUserState}>CLEAR FORM</button>
+            </div>
+
             <div style={{float: 'left', textAlign: 'left'}}>
                 <ul>
                     {
@@ -110,18 +194,16 @@ const CreateUser = (props) => {
 
                             return(
                                 <li key={index}>
-                                    {`${value.email}`}
-                                    <button>Delete</button>
-                                    <button onClick={() => {setIsEdit(true)}}>Edit</button>
-                                    </li>
+                                    {`${value.email} || ${value.admin ? "Admin" : "Not admin"} ||`}
+                                    <button onClick={onUserDeleteClick} name={index}>Delete</button>
+                                    <button onClick={onUserEditClick} name={index}>Edit</button>
+                                </li>
                             )
                             
                         })
                     }
                 </ul>
             </div>
-            <button onClick={() => { setLoggedIn(false) }}>LOGOUT</button>
-            <RLink to='/tasks'>Tasks</RLink>
         </div>
     );
 };
