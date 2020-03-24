@@ -87,8 +87,8 @@ function SignIn(props) {
             Password:
             <input type='password' name="password" onChange={onChangeHandler} value={password}></input><br />
             <button onClick={onClickHandler}>Log In</button><br /><br/>
-            <a href={`${uriBase}${userApi}/auth/google/login`}>LOGIN WITH GOOGLE</a><br/><br/>
-            <a href={`${uriBase}${userApi}/auth/facebook/login`}>LOGIN WITH FACEBOOK</a>
+            <a href={`${userApi}/auth/google/login`}>LOGIN WITH GOOGLE</a><br/><br/>
+            <a href={`${userApi}/auth/facebook/login`}>LOGIN WITH FACEBOOK</a>
         </div>
     );
 }
