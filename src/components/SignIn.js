@@ -37,7 +37,7 @@ function SignIn(props) {
         // Post the email and password to the api
         // if an email is found and it matches the
         // password, it will return a json web token
-        fetch(`${uriBase}${userApi}/login`, {
+        fetch(`${userApi}/login`, {
             method: 'POST',
             headers: {
                 "Content-Type": "application/json",
@@ -48,14 +48,13 @@ function SignIn(props) {
             if (!httpResult.ok) {
                 throw new Error("Could not get user")
             }
-            console.log("httpresult")
             return httpResult.json()
         })
         .then(result => {
 
             // if a token was returned
             if(result.token !== ''){
-                console.log(token)
+
                 setLoggedIn(true)
                 setToken(result.token)
             } 
@@ -73,7 +72,6 @@ function SignIn(props) {
 
         if (parsed.query.token){
 
-            console.log("useEffect", parsed.query.token)
             setLoggedIn(true)
             setToken(parsed.query.token)
             props.history.push('/tasks')

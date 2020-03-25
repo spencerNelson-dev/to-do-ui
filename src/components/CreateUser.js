@@ -79,8 +79,6 @@ const CreateUser = (props) => {
 
     const onClickEdit = async (event) => {
 
-        console.log(users)
-
         let updatedUser = {
             firstName,
             lastName,
@@ -88,8 +86,6 @@ const CreateUser = (props) => {
             password,
             admin
         }
-
-        console.log(editId, updatedUser)
 
         await updateUser(editId, updatedUser, token)
 
@@ -102,8 +98,6 @@ const CreateUser = (props) => {
         let index = event.target.name
 
         let user = users[index]
-
-        //console.log(index, user)
 
         setFirstName(user.firstName)
         setLastName(user.lastName)

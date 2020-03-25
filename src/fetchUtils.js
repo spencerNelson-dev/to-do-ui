@@ -29,8 +29,6 @@ export const getTasksByUserId = (user) => {
 // GET all users
 export const getAllUsers = (token) => {
 
-    console.log("getAllUsers", token)
-
     return fetch(`${userApi}`, {
         method: 'GET',
         headers: {
@@ -52,8 +50,6 @@ export const getAllUsers = (token) => {
 
 // POST - create new user
 export const createNewUser = (user, token) => {
-    
-    console.log("Create new User", user)
 
     let createObj = {}
     createObj.doc = user
@@ -71,7 +67,6 @@ export const createNewUser = (user, token) => {
             throw new Error("CreateNewUser Failed")
         }
 
-        console.log("createNewUser", httpResult.json())
         return httpResult.json()
     })
     .catch(error => {
@@ -81,9 +76,6 @@ export const createNewUser = (user, token) => {
 
 // delete user
 export const deleteUser = (user, token) => {
-
-    console.log("deleteUser user._id", user._id)
-
 
     return fetch(`${userApi}/delete/${user._id}`,{
         method: "DELETE",
@@ -103,8 +95,6 @@ export const deleteUser = (user, token) => {
 
 // POST - Create new task given a task object
 export const createNewTask = (newTask) => {
-
-    console.log("createNewTask", newTask)
 
     return fetch(`${currentApi}`, {
         method: "POST",
@@ -127,8 +117,6 @@ export const createNewTask = (newTask) => {
 
 // PATCH - update user
 export const updateUser = (userId,updatedUser, token) => {
-
-    console.log("updateUser user", updatedUser)
 
     return fetch(`${userApi}/update/${userId}`, {
         method: "PATCH",
