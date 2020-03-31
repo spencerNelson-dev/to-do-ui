@@ -8,6 +8,11 @@ const AuthProvider = (props) => {
     const [token, setToken] = React.useState('')
     const [admin, setAdmin] = React.useState(false)
 
+    const writeToken = (token) => {
+
+        setToken(token)
+    }
+
     return (
         <div>
             <AuthContext.Provider value ={{loggedIn, setLoggedIn, token, setToken, admin, setAdmin}}>

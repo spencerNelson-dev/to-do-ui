@@ -7,7 +7,7 @@ This file contains all the fetch requests used in our react app
 // GET all the tasks by user id
 export const getTasksByUserId = (user) => {
 
-    return fetch(`${currentApi}/${user._id}`, {
+    return fetch(`${uriBase}${currentApi}/${user._id}`, {
         method: 'GET',
         headers: {
             "Content-Type": "application/json",
@@ -29,7 +29,7 @@ export const getTasksByUserId = (user) => {
 // GET all users
 export const getAllUsers = (token) => {
 
-    return fetch(`${userApi}`, {
+    return fetch(`${uriBase}${userApi}`, {
         method: 'GET',
         headers: {
             "Authorization": `Bearer ${token}`,
@@ -54,7 +54,7 @@ export const createNewUser = (user, token) => {
     let createObj = {}
     createObj.doc = user
 
-    return fetch(`${userApi}/create`,{ 
+    return fetch(`${uriBase}${userApi}/create`,{ 
         method: "POST",
         headers: {
             "Authorization": `Bearer ${token}`,
@@ -77,7 +77,7 @@ export const createNewUser = (user, token) => {
 // delete user
 export const deleteUser = (user, token) => {
 
-    return fetch(`${userApi}/delete/${user._id}`,{
+    return fetch(`${uriBase}${userApi}/delete/${user._id}`,{
         method: "DELETE",
         headers: {
             "Authorization": `Bearer ${token}`,
@@ -96,7 +96,7 @@ export const deleteUser = (user, token) => {
 // POST - Create new task given a task object
 export const createNewTask = (newTask) => {
 
-    return fetch(`${currentApi}`, {
+    return fetch(`${uriBase}${currentApi}`, {
         method: "POST",
         headers: {
             "Content-Type": "application/json",
@@ -118,7 +118,7 @@ export const createNewTask = (newTask) => {
 // PATCH - update user
 export const updateUser = (userId,updatedUser, token) => {
 
-    return fetch(`${userApi}/update/${userId}`, {
+    return fetch(`${uriBase}${userApi}/update/${userId}`, {
         method: "PATCH",
         headers: {
             "Authorization": `Bearer ${token}`,
@@ -154,7 +154,7 @@ export const updateTask = (taskId, change) => {
         body = {"text": change}
     }
 
-    return fetch(`${currentApi}/${taskId}`, {
+    return fetch(`${uriBase}${currentApi}/${taskId}`, {
         method: "PATCH",
         headers: {
             "Content-Type": "application/json"
@@ -176,7 +176,7 @@ export const updateTask = (taskId, change) => {
 // DELETE - delete a task given a task id
 export const deleteTask = (taskId) => {
 
-    return fetch(`${currentApi}/${taskId}`, {
+    return fetch(`${uriBase}${currentApi}/${taskId}`, {
         method: "DELETE",
         headers: {
             "Content-Type": "application/json",

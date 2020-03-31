@@ -23,7 +23,7 @@ const DUMMY_DATA = [
 const uriBase = process.env.NODE_ENV !== 'production' ? (
     "http://localhost:5001"
 ) : (
-    "sn-todo.herokuapp.com"
+    "" // this is blank because heroku adds the base for us
 )
 
 

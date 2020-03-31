@@ -6,6 +6,8 @@ import { AuthContext } from './AuthContext'
 import { verifyToken } from '../jwtUtils'
 import { getTasksByUserId , createNewTask, updateTask} from '../fetchUtils'
 
+const ls = require('local-storage')
+
 
 const listStyle = {
 
@@ -30,7 +32,7 @@ export default function ListOfTasks(props) {
     const refresh = () => {
 
         // Verify Token
-        verifyToken(token, JWT_KEY)
+        verifyToken(ls.get("token"), JWT_KEY)
             .then(payload => {
 
                 return payload.user

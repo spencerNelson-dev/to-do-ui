@@ -2,6 +2,9 @@ import React, { useContext, useState, useEffect } from 'react';
 import { AuthContext } from './AuthContext'
 import { uriBase, userApi } from '../const'
 import queryString from 'query-string'
+import {Link as RLink} from 'react-router-dom'
+
+const ls = require('local-storage')
 
 function SignIn(props) {
     //State
@@ -37,7 +40,7 @@ function SignIn(props) {
         // Post the email and password to the api
         // if an email is found and it matches the
         // password, it will return a json web token
-        fetch(`${userApi}/login`, {
+        fetch(`${uriBase}${userApi}/login`, {
             method: 'POST',
             headers: {
                 "Content-Type": "application/json",
@@ -57,6 +60,7 @@ function SignIn(props) {
 
                 setLoggedIn(true)
                 setToken(result.token)
+                ls.set("token", result.token)
             } 
             props.history.push('/tasks')
         })
@@ -74,9 +78,18 @@ function SignIn(props) {
 
             setLoggedIn(true)
             setToken(parsed.query.token)
+            ls.set("token",parsed.query.token)
             props.history.push('/tasks')
         }
-    })
+
+        let localToken = ls.get("token")
+
+        if(localToken !== ""){
+            setLoggedIn(true)
+            setToken(localToken)
+        } 
+
+    },[])
 
     return (
         <div>
@@ -85,8 +98,9 @@ function SignIn(props) {
             Password:
             <input type='password' name="password" onChange={onChangeHandler} value={password}></input><br />
             <button onClick={onClickHandler}>Log In</button><br /><br/>
-            <a href={`${userApi}/auth/google/login`}>LOGIN WITH GOOGLE</a><br/><br/>
-            <a href={`${userApi}/auth/facebook/login`}>LOGIN WITH FACEBOOK</a>
+            <a href={`${uriBase}${userApi}/auth/google/login`}>LOGIN WITH GOOGLE</a><br/><br/>
+            <a href={`${uriBase}${userApi}/auth/facebook/login`}>LOGIN WITH FACEBOOK</a><br/><br/>
+            <RLink to='/tasks'>To Tasks</RLink>
         </div>
     );
 }
