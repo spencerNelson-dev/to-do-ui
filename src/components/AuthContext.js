@@ -8,10 +8,10 @@ const AuthProvider = (props) => {
     const [token, setToken] = React.useState('')
     const [admin, setAdmin] = React.useState(false)
 
-    const writeToken = (token) => {
+    // const writeToken = (token) => {
 
-        setToken(token)
-    }
+    //     setToken(token)
+    // }
 
     return (
         <div>

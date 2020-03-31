@@ -6,7 +6,7 @@ import { AuthContext } from './AuthContext'
 import { verifyToken } from '../jwtUtils'
 import { getTasksByUserId , createNewTask, updateTask} from '../fetchUtils'
 
-const ls = require('local-storage')
+//const ls = require('local-storage')
 
 
 const listStyle = {
@@ -27,12 +27,12 @@ export default function ListOfTasks(props) {
     const [isEdit, setIsEdit] = React.useState(false)
     const [editId, setEditId] = React.useState('')
 
-    const { setLoggedIn, token, admin, setAdmin } = React.useContext(AuthContext)
+    const { setLoggedIn, admin, setAdmin } = React.useContext(AuthContext)
 
     const refresh = () => {
 
         // Verify Token
-        verifyToken(ls.get("token"), JWT_KEY)
+        verifyToken(window.localStorage.getItem("token"), JWT_KEY)
             .then(payload => {
 
                 return payload.user

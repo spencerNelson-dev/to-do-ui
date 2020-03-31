@@ -13,7 +13,6 @@ const CreateUser = (props) => {
     const [lastName, setLastName] = useState('')
     const [email, setEmail] = useState('')
     const [password, setPassword] = useState('')
-    const [checkbox, setCheckbox] = useState(false)
     const [admin, setAdmin] = useState(false)
     const [isEdit, setIsEdit] = React.useState(false)
     const [editId, setEditId] = React.useState('')
@@ -27,7 +26,6 @@ const CreateUser = (props) => {
         setLastName('')
         setEmail('')
         setPassword('')
-        setCheckbox(false)
         setAdmin(false)
         setIsEdit(false)
         setEditId('')
@@ -149,11 +147,6 @@ const CreateUser = (props) => {
             )
         }
 
-    }
-
-    const changeCheckbox = (event) => {
-        
-        setCheckbox(!checkbox)
     }
 
     return (

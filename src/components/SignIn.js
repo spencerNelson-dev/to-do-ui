@@ -4,7 +4,7 @@ import { uriBase, userApi } from '../const'
 import queryString from 'query-string'
 import {Link as RLink} from 'react-router-dom'
 
-const ls = require('local-storage')
+//const ls = require('local-storage')
 
 function SignIn(props) {
     //State
@@ -12,7 +12,7 @@ function SignIn(props) {
     const [password, setPassword] = useState('')
 
     //Context
-    const {setLoggedIn, setToken, token } = useContext(AuthContext)
+    const {setLoggedIn, setToken} = useContext(AuthContext)
 
     const onChangeHandler = (event) => {
 
@@ -60,7 +60,7 @@ function SignIn(props) {
 
                 setLoggedIn(true)
                 setToken(result.token)
-                ls.set("token", result.token)
+                window.localStorage.setItem("token", result.token)
             } 
             props.history.push('/tasks')
         })
@@ -78,11 +78,11 @@ function SignIn(props) {
 
             setLoggedIn(true)
             setToken(parsed.query.token)
-            ls.set("token",parsed.query.token)
+            window.localStorage.setItem("token",parsed.query.token)
             props.history.push('/tasks')
         }
 
-        let localToken = ls.get("token")
+        let localToken = window.localStorage.getItem("token")
 
         if(localToken !== ""){
             setLoggedIn(true)
