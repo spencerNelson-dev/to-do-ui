@@ -108,8 +108,6 @@ function SignIn(props) {
                 </a><br /><br />
 
             <RLink to='/tasks'>To Tasks</RLink><br /><br /><br />
-
-            <a href={`http://localhost:5001/img/google_login.png`}>html</a>
             <br />
 
             <a href="https://www.termsfeed.com/privacy-policy/8f4f66fa4c830b22fc9a54a9b3601b26">Privacy Policy</a>
