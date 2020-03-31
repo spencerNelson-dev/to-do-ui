@@ -5,7 +5,7 @@ const AuthContext = React.createContext({})
 const AuthProvider = (props) => {
 
     const [loggedIn, setLoggedIn] = React.useState(false)
-    const [token, setToken] = React.useState('')
+    const [token, setToken] = React.useState(window.localStorage.getItem('token'))
     const [admin, setAdmin] = React.useState(false)
 
     // const writeToken = (token) => {

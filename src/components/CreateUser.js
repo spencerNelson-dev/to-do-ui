@@ -2,6 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { AuthContext } from './AuthContext'
 import {getAllUsers, createNewUser, deleteUser, updateUser} from '../fetchUtils'
 import {Link as RLink} from 'react-router-dom'
+import {verifyToken} from '../jwtUtils'
+import {JWT_KEY} from '../const'
 
 import CheckBox from '@material-ui/core/Checkbox'
 
@@ -19,7 +21,7 @@ const CreateUser = (props) => {
 
 
     // context
-    const { setLoggedIn, token } = React.useContext(AuthContext)
+    const { setToken, token } = React.useContext(AuthContext)
 
     const clearUserState = () => {
         setFirstName('')
@@ -122,11 +124,22 @@ const CreateUser = (props) => {
 
     const refresh = () => {
 
-
-        getAllUsers(token)
-        .then(users => {
+        verifyToken(token, JWT_KEY)
+        .then(payload => {
             
-            setUsers(users)
+            if(payload.user.admin){
+                getAllUsers(token)
+                .then(users => {
+                    
+                    setUsers(users)
+                })
+            } else{
+                props.history.push('/')
+            }
+        })
+        .catch(error => {
+            console.log(error)
+            props.history.push('/')
         })
     }
 
@@ -168,7 +181,7 @@ const CreateUser = (props) => {
 
             <div>
                 <br/><br/>
-            <button onClick={() => { setLoggedIn(false) }}>LOGOUT</button><t></t>
+            <button onClick={() => { window.localStorage.removeItem("token"); setToken('') }}>LOGOUT</button>
             <RLink to='/tasks'>Tasks</RLink>
             <button onClick={refresh}>Refresh</button>
             <button onClick={clearUserState}>CLEAR FORM</button>
