@@ -18,7 +18,7 @@ export default function Task(props) {
             setIsComplete(true)
             setChecked(true)
         } else {
-            setStyle({})
+            setStyle({textDecorationLine: 'none'})
             setIsComplete(false)
             setChecked(false)
         }
@@ -27,8 +27,6 @@ export default function Task(props) {
 
     const onClickComplete = () => {
 
-        updateLook()
-
         // update task with id and new isComplete
         updateTask(props.task._id, isComplete)
         .then(result => {
@@ -36,6 +34,7 @@ export default function Task(props) {
             // update state and refresh
             setIsComplete(result.isComplete)
             props.refresh()
+            updateLook()
         })
         .catch(error => {
             console.log(error)

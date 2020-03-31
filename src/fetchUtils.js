@@ -48,6 +48,32 @@ export const getAllUsers = (token) => {
     })
 }
 
+export const getAllTasks = (token) => {
+
+    return fetch(`${uriBase}${currentApi}`, {
+        method: 'GET',
+        headers: {
+            "Authorization": `Bearer ${token}`,
+            "Content-Type": "application/json"
+        }
+    })
+    .then(httpResult => {
+        if(!httpResult.ok){
+            throw new Error("Bad response")
+        }
+        
+        return httpResult.json()
+    })
+    .then(result => {
+        console.log("get tasks", result)
+
+        return result
+    })
+    .catch(error => {
+        console.log(error)
+    })
+}
+
 // POST - create new user
 export const createNewUser = (user, token) => {
 

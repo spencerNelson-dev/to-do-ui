@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { AuthContext } from './AuthContext'
-import {getAllUsers, createNewUser, deleteUser, updateUser} from '../fetchUtils'
+import {getAllUsers, createNewUser, deleteUser, updateUser, getAllTasks, deleteTask} from '../fetchUtils'
 import {Link as RLink} from 'react-router-dom'
 import {verifyToken} from '../jwtUtils'
 import {JWT_KEY} from '../const'
+import Task from './Task'
 
 import CheckBox from '@material-ui/core/Checkbox'
 
@@ -11,6 +12,7 @@ const CreateUser = (props) => {
 
     // state
     const [users, setUsers] = useState([])
+    const [tasks, setTasks] = useState([])
     const [firstName, setFirstName] = useState('')
     const [lastName, setLastName] = useState('')
     const [email, setEmail] = useState('')
@@ -122,6 +124,21 @@ const CreateUser = (props) => {
         refresh()
     }
 
+    const onClickDelete = (event) => {
+
+        console.log(event.target.value)
+
+        // remove task from the db and rerender
+        deleteTask(event.target.value)
+        .then(response => {
+
+           refresh()
+        })
+        .catch(error => {
+            console.log(error)
+        })
+    }
+
     const refresh = () => {
 
         verifyToken(token, JWT_KEY)
@@ -132,6 +149,12 @@ const CreateUser = (props) => {
                 .then(users => {
                     
                     setUsers(users)
+                })
+
+                getAllTasks(token)
+                .then(tasks => {
+
+                    setTasks(tasks || [])
                 })
             } else{
                 props.history.push('/')
@@ -188,18 +211,47 @@ const CreateUser = (props) => {
             </div>
 
             <div style={{float: 'left', textAlign: 'left'}}>
+                <h2>Users:</h2>
                 <ul>
                     {
                         users.map( (value, index) => {
 
                             return(
-                                <li key={index}>
-                                    {`${value.email} || ${value.admin ? "Admin" : "Not admin"} ||`}
+                                <li key={value._id}>
+                                    {`${value._id} || ${value.email} || ${value.admin ? "Admin" : "Not admin"} ||`}
                                     <button onClick={onUserDeleteClick} name={index}>Delete</button>
                                     <button onClick={onUserEditClick} name={index}>Edit</button>
                                 </li>
                             )
                             
+                        })
+                    }
+                </ul>
+                <h2>Tasks Without Users:</h2>
+                <ul>
+                    {
+                        tasks.filter((task) => {
+                            let foundTask = false
+
+                            users.forEach((user) => {
+
+                                if(task.userId === user._id){
+                                    foundTask = true
+                                }
+                            })
+
+                            if(!foundTask){
+                                return task
+                            }
+                        }).map( (value, index) => {
+
+                            return (
+                                <li key={index}>
+                                    {`${value.text} || ${value.userId}`}
+                                    <button onClick={onClickDelete} value={value._id}>DELETE</button>
+                                </li>
+                            )
+
                         })
                     }
                 </ul>

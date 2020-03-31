@@ -27,7 +27,7 @@ export default function ListOfTasks(props) {
     const [isEdit, setIsEdit] = React.useState(false)
     const [editId, setEditId] = React.useState('')
 
-    const { setLoggedIn, admin, setAdmin, setToken } = React.useContext(AuthContext)
+    const { admin, setAdmin, setToken } = React.useContext(AuthContext)
 
     const refresh = () => {
 
