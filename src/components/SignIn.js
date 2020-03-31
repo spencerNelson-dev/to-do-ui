@@ -2,7 +2,7 @@ import React, { useContext, useState, useEffect } from 'react';
 import { AuthContext } from './AuthContext'
 import { uriBase, userApi } from '../const'
 import queryString from 'query-string'
-import {Link as RLink} from 'react-router-dom'
+import { Link as RLink } from 'react-router-dom'
 
 //const ls = require('local-storage')
 
@@ -12,7 +12,7 @@ function SignIn(props) {
     const [password, setPassword] = useState('')
 
     //Context
-    const {setLoggedIn, setToken} = useContext(AuthContext)
+    const { setLoggedIn, setToken } = useContext(AuthContext)
 
     const onChangeHandler = (event) => {
 
@@ -47,49 +47,49 @@ function SignIn(props) {
             },
             body: JSON.stringify(body)
         })
-        .then(httpResult => {
-            if (!httpResult.ok) {
-                throw new Error("Could not get user")
-            }
-            return httpResult.json()
-        })
-        .then(result => {
+            .then(httpResult => {
+                if (!httpResult.ok) {
+                    throw new Error("Could not get user")
+                }
+                return httpResult.json()
+            })
+            .then(result => {
 
-            // if a token was returned
-            if(result.token !== ''){
+                // if a token was returned
+                if (result.token !== '') {
 
-                setLoggedIn(true)
-                setToken(result.token)
-                window.localStorage.setItem("token", result.token)
-            } 
-            props.history.push('/tasks')
-        })
-        .catch(error => {
-            console.error(error.name, error.message)
-        })
+                    setLoggedIn(true)
+                    setToken(result.token)
+                    window.localStorage.setItem("token", result.token)
+                }
+                props.history.push('/tasks')
+            })
+            .catch(error => {
+                console.error(error.name, error.message)
+            })
     }
 
     // oauth sign in
-    useEffect( (parsed) => {
+    useEffect((parsed) => {
 
         parsed = queryString.parseUrl(window.location.href)
 
-        if (parsed.query.token){
+        if (parsed.query.token) {
 
             setLoggedIn(true)
             setToken(parsed.query.token)
-            window.localStorage.setItem("token",parsed.query.token)
+            window.localStorage.setItem("token", parsed.query.token)
             props.history.push('/tasks')
         }
 
         let localToken = window.localStorage.getItem("token")
 
-        if(localToken !== ""){
+        if (localToken !== "") {
             setLoggedIn(true)
             setToken(localToken)
-        } 
+        }
 
-    },[])
+    }, [])
 
     return (
         <div>
@@ -97,10 +97,22 @@ function SignIn(props) {
             <input type='email' name="email" onChange={onChangeHandler} value={email}></input><br />
             Password:
             <input type='password' name="password" onChange={onChangeHandler} value={password}></input><br />
-            <button onClick={onClickHandler}>Log In</button><br /><br/>
-            <a href={`${uriBase}${userApi}/auth/google/login`}>LOGIN WITH GOOGLE</a><br/><br/>
-            <a href={`${uriBase}${userApi}/auth/facebook/login`}>LOGIN WITH FACEBOOK</a><br/><br/>
-            <RLink to='/tasks'>To Tasks</RLink>
+            <button onClick={onClickHandler}>Log In</button><br /><br />
+
+            <a href={`${uriBase}${userApi}/auth/google/login`}>
+                <img src={`${uriBase}/img/google_login.png`} alt='Google Login' height='45' width='190'></img>
+            </a>
+            <br /><br />
+            <a href={`${uriBase}${userApi}/auth/facebook/login`}>
+                <img src={`${uriBase}/img/facebook_login.png`} alt='Facebook Login' height='45' width='190'></img>
+                </a><br /><br />
+
+            <RLink to='/tasks'>To Tasks</RLink><br /><br /><br />
+
+            <a href={`http://localhost:5001/img/google_login.png`}>html</a>
+            <br />
+
+            <a href="https://www.termsfeed.com/privacy-policy/8f4f66fa4c830b22fc9a54a9b3601b26">Privacy Policy</a>
         </div>
     );
 }
