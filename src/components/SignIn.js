@@ -3,6 +3,7 @@ import { AuthContext } from './AuthContext'
 import { uriBase, userApi } from '../const'
 import queryString from 'query-string'
 import { Link as RLink } from 'react-router-dom'
+import Button from '@material-ui/core/Button'
 
 //const ls = require('local-storage')
 
@@ -111,7 +112,9 @@ function SignIn(props) {
             <input type='email' name="email" onChange={onChangeHandler} value={email}></input><br />
             Password:
             <input type='password' name="password" onChange={onChangeHandler} value={password}></input><br />
-            <button onClick={onClickHandlerLogIn}>Log In</button><br /><br />
+            <Button onClick={onClickHandlerLogIn}>Log In</Button>
+            <Button component={RLink} to='/signup'>Sign Up!</Button>
+            <br /><br />
 
             <a href={`${uriBase}${userApi}/auth/google/login`}>
                 <img src={`${uriBase}/img/google_login.png`} alt='Google Login' height='45' width='190'></img>

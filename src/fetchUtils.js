@@ -1,4 +1,5 @@
-import { uriBase, currentApi, userApi } from './const'
+import { uriBase, currentApi, userApi, JWT_KEY } from './const'
+import jwt from 'jsonwebtoken'
 
 /*
 This file contains all the fetch requests used in our react app
@@ -76,6 +77,33 @@ export const getAllTasks = (token) => {
 
 // POST - create new user
 export const createNewUser = (user, token) => {
+
+    let createObj = {}
+    createObj.doc = user
+
+    return fetch(`${uriBase}${userApi}/create`,{ 
+        method: "POST",
+        headers: {
+            "Authorization": `Bearer ${token}`,
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify(createObj)
+    })
+    .then(httpResult => {
+        if(!httpResult.ok){
+            throw new Error("CreateNewUser Failed")
+        }
+
+        return httpResult.json()
+    })
+    .catch(error => {
+        console.log(error)
+    })
+}
+export const createNewUserNoToken = async (user) => {
+
+    //make a token
+    let token = await jwt.sign({email:"spencernelson144@gmail.com"}, JWT_KEY)
 
     let createObj = {}
     createObj.doc = user

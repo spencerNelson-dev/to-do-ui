@@ -33,9 +33,6 @@ const TasksProvider = (props) => {
         }
     }, [tasks.length, user])
 
-    console.log("tasks context", tasks)
-
-
     return (
         <div>
             <TasksContext.Provider value={{ tasks, setTasks }}>

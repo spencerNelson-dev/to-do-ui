@@ -7,6 +7,7 @@ import {TasksProvider} from './TasksContext'
 import ProtectedRoute from './ProtectedRoute'
 import CreateUser from './CreateUser'
 import Title from './Title'
+import SignUp from './SignUp';
 
 function MainRouter(props) {
     return (
@@ -18,6 +19,7 @@ function MainRouter(props) {
                     <Switch>
                         <ProtectedRoute path='/tasks' component={ListOfTasks} />
                         <ProtectedRoute path='/create-user' component={CreateUser} />
+                        <Route path='/signup' component={SignUp} />
                         <Route path='/' component={SignIn} />
                     </Switch>
                     </TasksProvider>

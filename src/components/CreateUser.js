@@ -4,7 +4,6 @@ import {getAllUsers, createNewUser, deleteUser, updateUser, getAllTasks, deleteT
 import {Link as RLink} from 'react-router-dom'
 import {verifyToken} from '../jwtUtils'
 import {JWT_KEY} from '../const'
-import Task from './Task'
 
 import CheckBox from '@material-ui/core/Checkbox'
 

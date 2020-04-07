@@ -1,11 +1,9 @@
 import React from 'react';
 import Task from './Task'
 import AddTask from './AddTask'
-import {  JWT_KEY } from '../const'
 import { AuthContext } from './AuthContext'
 import { TasksContext } from './TasksContext'
-import { verifyToken } from '../jwtUtils'
-import { getTasksByUserId , createNewTask, updateTask} from '../fetchUtils'
+import { createNewTask, updateTask} from '../fetchUtils'
 
 //const ls = require('local-storage')
 
