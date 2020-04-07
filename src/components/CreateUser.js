@@ -22,7 +22,7 @@ const CreateUser = (props) => {
 
 
     // context
-    const { setToken, token } = React.useContext(AuthContext)
+    const { setToken, token, setLoggedIn, setUser } = React.useContext(AuthContext)
 
     //clears all the textfields
     const clearUserState = () => {
@@ -204,7 +204,7 @@ const CreateUser = (props) => {
 
             <div>
                 <br/><br/>
-            <button onClick={() => { window.localStorage.removeItem("token"); setToken('') }}>LOGOUT</button>
+                <button onClick={() => { window.localStorage.removeItem("token"); setToken(''); setLoggedIn(false); setTasks([]); setUser({}) }}>LOGOUT</button>
             <RLink to='/tasks'>Tasks</RLink>
             <button onClick={refresh}>Refresh</button>
             <button onClick={clearUserState}>CLEAR FORM</button>

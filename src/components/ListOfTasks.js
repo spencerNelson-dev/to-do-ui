@@ -26,7 +26,7 @@ export default function ListOfTasks(props) {
     const [isEdit, setIsEdit] = React.useState(false)
     const [editId, setEditId] = React.useState('')
 
-    const { setLoggedIn, user, } = React.useContext(AuthContext)
+    const { setLoggedIn, user, setUser} = React.useContext(AuthContext)
 
     const {tasks, setTasks} = React.useContext(TasksContext)
 
@@ -182,7 +182,7 @@ export default function ListOfTasks(props) {
                 </AddTask>
             </div>
 
-            <button onClick={() => { window.localStorage.removeItem("token"); setLoggedIn(false) }}>LOGOUT</button>
+            <button onClick={() => { window.localStorage.removeItem("token"); setLoggedIn(false); setTasks([]); setUser({}) }}>LOGOUT</button>
             <br/><br/>
             <div>
                 {
