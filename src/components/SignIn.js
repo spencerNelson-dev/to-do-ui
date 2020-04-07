@@ -12,7 +12,7 @@ function SignIn(props) {
     const [password, setPassword] = useState('')
 
     //Context
-    const { setLoggedIn, setToken } = useContext(AuthContext)
+    const { loggedIn, setLoggedIn, setToken } = useContext(AuthContext)
 
     const onChangeHandler = (event) => {
 
@@ -33,7 +33,7 @@ function SignIn(props) {
     }
 
     // email password sign in
-    const onClickHandler = () => {
+    const onClickHandlerLogIn = () => {
 
         let body = { email, password }
 
@@ -69,22 +69,36 @@ function SignIn(props) {
             })
     }
 
-    // oauth sign in
+    // oauth sign in and token sign in
+    // we only want to run this once,
+    // when to app first loads
     useEffect((parsed) => {
 
+        // we look at the href on the window to see if a
+        // token is there
+        // if the user logged in through google or facebook
+        // it would appear there
         parsed = queryString.parseUrl(window.location.href)
 
+        //if the token is there
         if (parsed.query.token) {
 
+            // we log the user in and
+            // write the token to local storage
             setLoggedIn(true)
             setToken(parsed.query.token)
             window.localStorage.setItem("token", parsed.query.token)
             props.history.push('/tasks')
         }
 
+
+        // either way we we then look at the local
+        // storage to see if there is already a token
         let localToken = window.localStorage.getItem("token")
 
-        if (localToken !== "") {
+        // if the token there we will log the user in
+        // and set our state
+        if (localToken) {
             setLoggedIn(true)
             setToken(localToken)
         }
@@ -97,7 +111,7 @@ function SignIn(props) {
             <input type='email' name="email" onChange={onChangeHandler} value={email}></input><br />
             Password:
             <input type='password' name="password" onChange={onChangeHandler} value={password}></input><br />
-            <button onClick={onClickHandler}>Log In</button><br /><br />
+            <button onClick={onClickHandlerLogIn}>Log In</button><br /><br />
 
             <a href={`${uriBase}${userApi}/auth/google/login`}>
                 <img src={`${uriBase}/img/google_login.png`} alt='Google Login' height='45' width='190'></img>
@@ -107,7 +121,11 @@ function SignIn(props) {
                 <img src={`${uriBase}/img/facebook_login.png`} alt='Facebook Login' height='45' width='190'></img>
                 </a><br /><br />
 
-            <RLink to='/tasks'>To Tasks</RLink><br /><br /><br />
+                {
+                    loggedIn ? <RLink to='/tasks'>To Tasks</RLink> : null
+                }
+
+            <br /><br /><br />
             <br />
 
             <a href="https://www.termsfeed.com/privacy-policy/8f4f66fa4c830b22fc9a54a9b3601b26">Privacy Policy</a>

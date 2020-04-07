@@ -192,7 +192,7 @@ export const updateTask = (taskId, change) => {
                 throw new Error("Could not update with edit")
             }
 
-            return httpResult
+            return httpResult.json()
         })
         .catch(error => {
             console.log(error)

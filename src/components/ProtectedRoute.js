@@ -7,12 +7,12 @@ export default function ProtectedRoute ({component: Component, ...rest}) {
     return (
         <AuthConsumer>
             {
-                ({token}) => (
+                ({loggedIn}) => (
 
                     <Route
                         render ={props => 
 
-                            token !== "" ? <Component {...props} /> : <Redirect to='/'/>
+                            loggedIn ? <Component {...props} /> : <Redirect to='/'/>
                         }
                         {...rest}
                     />

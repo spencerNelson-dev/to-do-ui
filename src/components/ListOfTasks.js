@@ -3,6 +3,7 @@ import Task from './Task'
 import AddTask from './AddTask'
 import {  JWT_KEY } from '../const'
 import { AuthContext } from './AuthContext'
+import { TasksContext } from './TasksContext'
 import { verifyToken } from '../jwtUtils'
 import { getTasksByUserId , createNewTask, updateTask} from '../fetchUtils'
 
@@ -21,45 +22,20 @@ const dateStyle = {
 }
 
 export default function ListOfTasks(props) {
-    const [user, setUser] = React.useState('')
-    const [tasks, setTasks] = React.useState([])
+    //const [user, setUser] = React.useState('')
+   // const [tasks, setTasks] = React.useState([])
     const [text, setText] = React.useState('')
     const [isEdit, setIsEdit] = React.useState(false)
     const [editId, setEditId] = React.useState('')
 
-    const { admin, setAdmin, setToken } = React.useContext(AuthContext)
+    const { setLoggedIn, user, } = React.useContext(AuthContext)
 
-    const refresh = () => {
-
-        // Verify Token
-        verifyToken(window.localStorage.getItem("token"), JWT_KEY)
-            .then(payload => {
-
-                return payload.user
-            })
-            .then(user => {
-
-                // set user
-                setUser(user)
-                setAdmin(user.admin)
-
-                // get tasks by user id
-                getTasksByUserId(user)
-                .then(tasks => {
-                    setTasks(tasks)
-                })
-
-            }) // end of verify token
-            .catch(error => {
-
-                console.log(error)
-                props.history.push('/')
-            })
-    }
+    const {tasks, setTasks} = React.useContext(TasksContext)
 
     const onClickAdd = (event) => {
 
         // check to see if the task is empty
+        // if it is, send an alert
         if (text === '') {
 
             return (
@@ -78,7 +54,15 @@ export default function ListOfTasks(props) {
         // add the object to the database and refresh
         createNewTask(newTask)
         .then(result => {
-            refresh()
+
+            // copy our current tasks state
+            let updatedArray = [...tasks]
+
+            //push our added task
+            updatedArray.push(result)
+
+            //set our state
+            setTasks(updatedArray)
         })
 
         //clear text field
@@ -87,6 +71,8 @@ export default function ListOfTasks(props) {
 
     const onClickEdit = () => {
 
+        // return the view to the add task
+        // state
         setIsEdit(false)
 
         if (editId !== '') {
@@ -95,9 +81,24 @@ export default function ListOfTasks(props) {
             updateTask(editId, text)
                 .then(result => {
 
-                    // update the view
-                    refresh()
+                    // copy the state
+                    let updatedTasks = [...tasks]
+
+                    // look for the element with the
+                    // id that was edited
+                    // and change the text
+                    for(let element of tasks){
+                        if(element._id === editId){
+                            element.text = text
+                        }
+                    }
+
+                    // set state with updated tasks
+                    setTasks(updatedTasks)
+
+                    // clear the textbox
                     setText('')
+
                 })
                 .catch(error => {
                     console.log(error)
@@ -107,20 +108,15 @@ export default function ListOfTasks(props) {
         }
     }
 
-    React.useEffect(() => {
-
-        refresh()
-    }, [])
-
     const tasksToDisplayArray = (tasks) => {
         // here we reduce our tasks array, pulling out unique dates
         // and making them their own items in the display array
         // later with our map we will return the date
-        // as its own li
+        // as its own <li>
 
         return tasks.reduce((displayArr, currentTask) => {
 
-            // if the date is not
+            // if the date is not the previous date
             if (new Date(currentTask.date).toLocaleDateString() !==
                 new Date(currentDate).toLocaleDateString()) {
 
@@ -151,7 +147,6 @@ export default function ListOfTasks(props) {
                 task.text ? (
                     <li style={listStyle} key={index}>
                         <Task task={task}
-                            refresh={refresh}
                             setIsEdit={setIsEdit}
                             setText={setText}
                             setEditId={setEditId}></Task>
@@ -167,7 +162,7 @@ export default function ListOfTasks(props) {
         }) // end of map()
     } // end of tasksToDisplayArr()
 
-    let currentDate = new Date(0)
+    let currentDate = new Date()
 
     return (
         <div>
@@ -184,17 +179,16 @@ export default function ListOfTasks(props) {
             <div>
                 <AddTask text={text} setText={setText}
                     onClickAdd={onClickAdd}
-                    refresh={refresh}
                     isEdit={isEdit} setIsEdit={setIsEdit}
                     onClickEdit={onClickEdit} >
                 </AddTask>
             </div>
 
-            <button onClick={() => { window.localStorage.removeItem("token"); setToken('') }}>LOGOUT</button>
+            <button onClick={() => { window.localStorage.removeItem("token"); setLoggedIn(false) }}>LOGOUT</button>
             <br/><br/>
             <div>
                 {
-                    admin ? (
+                    user.admin ? (
                         <button onClick={() => { props.history.push('/create-user')}}>Admin Page</button>
                     ) : (null)
                 }

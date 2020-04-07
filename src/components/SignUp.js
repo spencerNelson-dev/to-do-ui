@@ -1,11 +1,11 @@
 import React from 'react';
 
-function Test(props) {
+function SignUp(props) {
     return (
         <div>
-            This is protected
+            
         </div>
     );
 }
 
-export default Test;
+export default SignUp;

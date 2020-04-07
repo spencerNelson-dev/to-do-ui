@@ -25,6 +25,7 @@ const CreateUser = (props) => {
     // context
     const { setToken, token } = React.useContext(AuthContext)
 
+    //clears all the textfields
     const clearUserState = () => {
         setFirstName('')
         setLastName('')
@@ -218,7 +219,7 @@ const CreateUser = (props) => {
 
                             return(
                                 <li key={value._id}>
-                                    {`${value._id} || ${value.email} || ${value.admin ? "Admin" : "Not admin"} ||`}
+                                    {`${value.firstName} || ${value.email} || ${value.admin ? "Admin" : "Not admin"} ||`}
                                     <button onClick={onUserDeleteClick} name={index}>Delete</button>
                                     <button onClick={onUserEditClick} name={index}>Edit</button>
                                 </li>

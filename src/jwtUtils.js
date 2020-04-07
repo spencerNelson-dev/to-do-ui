@@ -12,5 +12,9 @@ export function verifyToken(token, key) {
                 resolve(payload)
             }
         })
+
+    })
+    .catch(error => {
+        console.log(error)
     })
 }
