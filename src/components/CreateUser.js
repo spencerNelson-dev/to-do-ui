@@ -25,7 +25,7 @@ const CreateUser = (props) => {
 
     // context
     const { setToken, token, setLoggedIn, setUser } = React.useContext(AuthContext)
-    const { tasks, setTasks, users, setUsers, allTasks, setAllTasks } = React.useContext(TasksContext)
+    const { setTasks, users, setUsers, allTasks, setAllTasks } = React.useContext(TasksContext)
 
     //#endregion
 
@@ -308,19 +308,24 @@ const CreateUser = (props) => {
                 <h2>Tasks Without Users:</h2>
                 <ul>
                     {
-                        allTasks.filter((task) => {
-                            let foundTask = false
+                        // filter out tasks that the user
+                        // was deleted
+                        allTasks.filter( (task) => {
+                            let lostTask = true
 
+                            //look for the user id that
+                            //matches
                             users.forEach((user) => {
 
                                 if (task.userId === user._id) {
-                                    foundTask = true
+                                    lostTask = false
                                 }
                             })
 
-                            if (!foundTask) {
-                                return task
-                            }
+                            //true if lost
+                            //false if not
+                            return lostTask
+
                         }).map((value, index) => {
 
                             return (
