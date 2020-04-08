@@ -2,6 +2,7 @@ import React from 'react';
 
 export default function Task(props) {
 
+    // update the textfield to show what we type
     const onChangeHandler = (event) => {
 
         props.setText(event.target.value)
@@ -11,6 +12,8 @@ export default function Task(props) {
         }
     }
 
+    // function to display button
+    // depending on the state
     const createButton = () => {
 
         if(!props.isEdit){

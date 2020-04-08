@@ -22,10 +22,11 @@ const AuthProvider = (props) => {
             // set user state
             verifyToken(token, JWT_KEY)
                 .then(result => {
+                    //update user state
                     setUser(result.user)
-                    console.log("AuthContext user", result)
                 })
                 .catch(error => {
+
                     //if something goes wrong with verifying
                     //the token, clear the tokens
                     setToken('')

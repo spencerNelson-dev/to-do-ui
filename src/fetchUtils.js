@@ -66,7 +66,6 @@ export const getAllTasks = (token) => {
         return httpResult.json()
     })
     .then(result => {
-        console.log("get tasks", result)
 
         return result
     })

@@ -14,6 +14,8 @@ export default function Task(props) {
 
     const { tasks, setTasks } = React.useContext(TasksContext)
 
+    // function to update the look
+    // crossing out completed tasks
     const updateLook = () => {
 
         if (!isComplete) {
@@ -28,6 +30,8 @@ export default function Task(props) {
 
     }
 
+    // update the db with the task
+    // that is complete
     const onClickComplete = () => {
 
         // update task with id and new isComplete
@@ -63,6 +67,7 @@ export default function Task(props) {
             })
     }
 
+    // delete the task
     const onClickDelete = () => {
 
         // the task we are deleting
@@ -106,6 +111,8 @@ export default function Task(props) {
             })
     }
 
+    // move the task information into the edit
+    // bar and change the button
     const onClickEdit = () => {
         props.setIsEdit(true)
         props.setText(props.task.text)

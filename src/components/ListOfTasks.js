@@ -20,16 +20,15 @@ const dateStyle = {
 }
 
 export default function ListOfTasks(props) {
-    //const [user, setUser] = React.useState('')
-   // const [tasks, setTasks] = React.useState([])
+
     const [text, setText] = React.useState('')
     const [isEdit, setIsEdit] = React.useState(false)
     const [editId, setEditId] = React.useState('')
 
     const { setLoggedIn, user, setUser} = React.useContext(AuthContext)
-
     const {tasks, setTasks} = React.useContext(TasksContext)
 
+    // function adds 
     const onClickAdd = (event) => {
 
         // check to see if the task is empty
