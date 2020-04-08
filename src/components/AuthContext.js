@@ -29,7 +29,9 @@ const AuthProvider = (props) => {
 
                     //if something goes wrong with verifying
                     //the token, clear the tokens
+                    //and set loggedIn to false
                     setToken('')
+                    setLoggedIn(false)
                     window.localStorage.removeItem('token')
                     console.log("AuthContext", error)
                 })
