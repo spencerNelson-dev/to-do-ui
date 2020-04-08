@@ -11,42 +11,30 @@ const AuthProvider = (props) => {
     const [admin, setAdmin] = React.useState(false)
     const [user, setUser] = React.useState({})
 
-    // helper function to check if an object is empty
-    const isEmpty = (obj) => {
-        for (let prop in obj) {
-            if (obj.hasOwnProperty(prop))
-                return false
-        }
-        return true
-    }
 
-
+    // we want to load tasks for the user in the token
     React.useEffect(() => {
 
-        //if user is empty
-        if (isEmpty(user)) {
+        // if there is a token set
+        if (token) {
 
-            // if there is a token set
-            if (token) {
-
-                // verify the token
-                // set user state
-                verifyToken(token, JWT_KEY)
-                    .then(result => {
-                        setUser(result.user)
-                        console.log("AuthContext user", result)
-                    })
-                    .catch(error => {
-                        //if something goes wrong with verifying
-                        //the token, clear the tokens
-                        setToken('')
-                        window.localStorage.removeItem('token')
-                        console.log("AuthContext", error)
-                    })
-            }
+            // verify the token
+            // set user state
+            verifyToken(token, JWT_KEY)
+                .then(result => {
+                    setUser(result.user)
+                    console.log("AuthContext user", result)
+                })
+                .catch(error => {
+                    //if something goes wrong with verifying
+                    //the token, clear the tokens
+                    setToken('')
+                    window.localStorage.removeItem('token')
+                    console.log("AuthContext", error)
+                })
         }
 
-    }, [token, user])
+    }, [token])
 
 
     return (

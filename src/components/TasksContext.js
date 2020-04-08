@@ -13,7 +13,7 @@ const TasksProvider = (props) => {
 
     // we will need our token to get our user
     // and know which tasks to get
-    const { user } = useContext(AuthContext)
+    const { user, token } = useContext(AuthContext)
 
     // the first time our app loads we want to
     // send a request to our server for the 
@@ -21,9 +21,10 @@ const TasksProvider = (props) => {
     // the server each time we update our state
     useEffect(() => {
 
-        // if tasks have not been loaded
-        // from database
-        if (tasks.length === 0) {
+        // if there is a token,
+        // get the tasks tied to the
+        // user that is stored in the token
+        if (token) {
 
             //get tasks by user
             getTasksByUserId(user)
@@ -31,7 +32,7 @@ const TasksProvider = (props) => {
                 setTasks(result)
             })
         }
-    }, [tasks.length, user])
+    }, [token, user])
 
     return (
         <div>
