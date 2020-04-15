@@ -9,11 +9,14 @@ This file contains all the fetch requests used in our react app
 //#region 
 
 // GET all the tasks by user id
-export const getTasksByUserId = (user) => {
+export const getTasksByUserId = (user, token) => {
 
-    return fetch(`${uriBase}${currentApi}/${user._id}`, {
+    console.log("fetch", user._id)
+
+    return fetch(`${uriBase}${currentApi}/?userId=${user._id}`, {
         method: 'GET',
         headers: {
+            "Authorization": `Bearer ${token}`,
             "Content-Type": "application/json",
         }
     })

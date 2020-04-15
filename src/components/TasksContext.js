@@ -43,7 +43,7 @@ const TasksProvider = (props) => {
 
             // get all tasks associated
             // with that user
-            getTasksByUserId(user)
+            getTasksByUserId(user, token)
                 .then(result => {
                     setTasks(result)
                 })

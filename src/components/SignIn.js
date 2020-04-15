@@ -63,7 +63,7 @@ function SignIn(props) {
                     setToken(result.token)
                     window.localStorage.setItem("token", result.token)
                 }
-                props.history.push('/tasks')
+                props.history.push(`/tasks`)
             })
             .catch(error => {
                 console.error(error.name, error.message)
