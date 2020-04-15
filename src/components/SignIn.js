@@ -63,7 +63,7 @@ function SignIn(props) {
                     setToken(result.token)
                     window.localStorage.setItem("token", result.token)
                 }
-                props.history.push(`/tasks`)
+                props.history.push(`/tasksList`)
             })
             .catch(error => {
                 console.error(error.name, error.message)
@@ -89,7 +89,7 @@ function SignIn(props) {
             setLoggedIn(true)
             setToken(parsed.query.token)
             window.localStorage.setItem("token", parsed.query.token)
-            props.history.push('/tasks')
+            props.history.push('/tasksList')
         }
 
 
@@ -125,7 +125,7 @@ function SignIn(props) {
                 </a><br /><br />
 
                 {
-                    loggedIn ? <RLink to='/tasks'>To Tasks</RLink> : null
+                    loggedIn ? <RLink to='/tasksList'>To Tasks</RLink> : null
                 }
 
             <br /><br /><br />

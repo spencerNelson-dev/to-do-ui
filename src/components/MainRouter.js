@@ -17,7 +17,7 @@ function MainRouter(props) {
                     <TasksProvider>
                     <Title></Title>
                     <Switch>
-                        <ProtectedRoute path='/tasks' component={ListOfTasks} />
+                        <ProtectedRoute path='/tasksList' component={ListOfTasks} />
                         <ProtectedRoute path='/create-user' component={CreateUser} />
                         <Route path='/signup' component={SignUp} />
                         <Route path='/' component={SignIn} />
