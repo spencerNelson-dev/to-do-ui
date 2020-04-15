@@ -35,7 +35,6 @@ const TasksProvider = (props) => {
     // send a request to our server for 
     // information
     useEffect(() => {
-        console.log("Tasks Context")
 
         // if there is a user
         // then get information from server
