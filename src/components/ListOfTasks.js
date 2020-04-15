@@ -3,7 +3,7 @@ import Task from './Task'
 import AddTask from './AddTask'
 import { AuthContext } from './AuthContext'
 import { TasksContext } from './TasksContext'
-import { createNewTask, updateTask} from '../fetchUtils'
+import { createNewTask, updateTask } from '../fetchUtils'
 
 //const ls = require('local-storage')
 
@@ -25,8 +25,8 @@ export default function ListOfTasks(props) {
     const [isEdit, setIsEdit] = React.useState(false)
     const [editId, setEditId] = React.useState('')
 
-    const { setLoggedIn, user, setUser} = React.useContext(AuthContext)
-    const {tasks, setTasks} = React.useContext(TasksContext)
+    const { setLoggedIn, user, setUser } = React.useContext(AuthContext)
+    const { tasks, setTasks } = React.useContext(TasksContext)
 
     // function adds 
     const onClickAdd = (event) => {
@@ -53,17 +53,18 @@ export default function ListOfTasks(props) {
         .then(result => {
 
             // copy our current tasks state
-            let updatedArray = [...tasks]
-
-            //push our added task
-            updatedArray.push(result)
+            // and add our new task (result) at the end
+            let updatedArray = [...tasks, result]
 
             //set our state
             setTasks(updatedArray)
         })
+        .then(
+            
+            //clear text field
+            setText('')
+        )
 
-        //clear text field
-        setText('')
     }
 
     const onClickEdit = () => {
@@ -72,6 +73,8 @@ export default function ListOfTasks(props) {
         // state
         setIsEdit(false)
 
+        // an id must be set before we can
+        // send the request
         if (editId !== '') {
 
             // update task in db
@@ -84,8 +87,8 @@ export default function ListOfTasks(props) {
                     // look for the element with the
                     // id that was edited
                     // and change the text
-                    for(let element of tasks){
-                        if(element._id === editId){
+                    for (let element of tasks) {
+                        if (element._id === editId) {
                             element.text = text
                         }
                     }
@@ -132,31 +135,31 @@ export default function ListOfTasks(props) {
             return displayArr
 
         }, []) // end of reduce()
-        .map((task, index) => {
-            // This map function will translate our
-            // display array to li items
+            .map((task, index) => {
+                // This map function will translate our
+                // display array to li items
 
-            return (
+                return (
 
-                // if the text exists then we know that the
-                // item is not just a date and we will display
-                // all the task information
-                task.text ? (
-                    <li style={listStyle} key={index}>
-                        <Task task={task}
-                            setIsEdit={setIsEdit}
-                            setText={setText}
-                            setEditId={setEditId}></Task>
-                    </li>
-                    // if the item has no text property then
-                    // we will just display the date.
-                ) : (
-                        <li style={dateStyle} key={index}>
-                            {`***** ${new Date(task).toLocaleDateString()} *****`}
+                    // if the text exists then we know that the
+                    // item is not just a date and we will display
+                    // all the task information
+                    task.text ? (
+                        <li style={listStyle} key={index}>
+                            <Task task={task}
+                                setIsEdit={setIsEdit}
+                                setText={setText}
+                                setEditId={setEditId}></Task>
                         </li>
-                    )
-            )
-        }) // end of map()
+                        // if the item has no text property then
+                        // we will just display the date.
+                    ) : (
+                            <li style={dateStyle} key={index}>
+                                {`***** ${new Date(task).toLocaleDateString()} *****`}
+                            </li>
+                        )
+                )
+            }) // end of map()
     } // end of tasksToDisplayArr()
 
     let currentDate = new Date()
@@ -182,16 +185,16 @@ export default function ListOfTasks(props) {
             </div>
 
             <button onClick={() => { window.localStorage.removeItem("token"); setLoggedIn(false); setTasks([]); setUser({}) }}>LOGOUT</button>
-            <br/><br/>
+            <br /><br />
             <div>
                 {
                     user.admin ? (
-                        <button onClick={() => { props.history.push('/create-user')}}>Admin Page</button>
+                        <button onClick={() => { props.history.push('/create-user') }}>Admin Page</button>
                     ) : (null)
                 }
             </div>
-            
-            
+
+
         </div>
     )
 }

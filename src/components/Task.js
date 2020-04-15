@@ -46,7 +46,8 @@ export default function Task(props) {
                     let updatedArr = [...tasks]
 
 
-                    // find the indexOf the deleted task
+                    // update the state of the elment with
+                    // matching _id
                     for (let element of updatedArr) {
 
                         if (element._id === props.task._id) {

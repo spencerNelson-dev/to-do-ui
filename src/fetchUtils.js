@@ -112,6 +112,29 @@ export const updateTask = (taskId, change) => {
         })
 }
 
+// PUT - replace task geven task id and
+// the new task information
+export const replaceTask = (taskId, newTask) => {
+
+    return fetch(`${uriBase}${currentApi}/${taskId}`, {
+        method: "PUT",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify(newTask)
+    })
+    .then(httpResult => {
+        if (!httpResult.ok) {
+            throw new Error("Could not replace with PUT")
+        }
+
+        return httpResult.json()
+    })
+    .catch(error => {
+        console.log(error)
+    })
+}
+
 // DELETE - delete a task given a task id
 export const deleteTask = (taskId) => {
 
