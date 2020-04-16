@@ -103,7 +103,8 @@ export default function Task(props) {
 
                     //set the state
                     setTasks(updatedArr)
-                    updateLook()
+                    .then(updateLook())
+                    
                 }
 
             })
